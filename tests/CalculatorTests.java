@@ -16,18 +16,19 @@ public class CalculatorTests {
     }
 
     void runTest(String expr, Double res, HashMap<String, Double> map) {
-        CalcTree sumTree = null;
+        CalcTree sumTree;
         try {
             sumTree = CalcTree.parseFrom(expr, map);
             assert sumTree != null;
             Assert.assertEquals(res, sumTree.eval(), delta);
         } catch (ParseExprException | MathException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
     void runBrokenTest(String expr) throws MathException, ParseExprException {
-        CalcTree.parseFrom(expr, new HashMap<>());
+        CalcTree tree = CalcTree.parseFrom(expr, new HashMap<>());
+        tree.eval();
     }
 
     @Before
@@ -46,11 +47,11 @@ public class CalculatorTests {
         runTest("2+3", 5.0);
         runTest("2*3", 6.0);
         runTest("2^3", 8.0);
-        runTest("2/3", 2.0/3.0);
+        runTest("2/3", 2.0 / 3.0);
         runTest("2.0+2.0", 4.0);
         runTest("2.0*4.0", 8.0);
         runTest("12.0^2.0", 144.0);
-        runTest("22.0/3.0", 22.0/3.0);
+        runTest("22.0/3.0", 22.0 / 3.0);
         //runTest("sin(Pi)", 0.0);
     }
 
@@ -74,7 +75,7 @@ public class CalculatorTests {
         runTest("y+2", 4.0, map);
     }
 
-    @Test(expected = MathException.class)//TODO - check why it don't throw exceptions
+    @Test(expected = MathException.class)
     public void mathExceptionsTests() throws MathException, ParseExprException {
         runBrokenTest("2/0");
         runBrokenTest("ln(-1)");

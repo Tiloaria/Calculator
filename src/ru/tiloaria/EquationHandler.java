@@ -10,7 +10,7 @@ public class EquationHandler {
     private static int newVarNameNum;
     private String result = "";
 
-    public static String genNewVarName() {
+    private static String genNewVarName() {
         while (variables.containsKey("x" + String.valueOf(newVarNameNum))) {
             newVarNameNum++;
         }
@@ -19,6 +19,7 @@ public class EquationHandler {
 
     public EquationHandler(String expr) throws MathException, ParseExprException {
         setConstants();
+        expr = expr.replaceAll("\n|\r| ", "");
         expr = replaceMacros(expr);
         if (expr.matches("[^=]+")) {
             CalcTree tree = CalcTree.parseFrom(expr, variables);
@@ -44,11 +45,10 @@ public class EquationHandler {
             String varName = expr.substring(funNameEnd + 1, eqPlace - 1);
             String replName = expr.substring(eqPlace + 1);
             macros.add(new Macros(macrName, replName, varName));
-            //check that there is only one variable
             result = '$' + macrName;
             return;
         }
-        throw new ParseExprException();
+        throw new ParseExprException("Incorrect requests syntax");
     }
 
     public String eval() {
@@ -76,23 +76,23 @@ public class EquationHandler {
         public String getReplacedString(String expr) throws ParseExprException {
             int firstPlace = expr.indexOf(macrosName + '(');
             int balance = 1;
-            int openBracPlace = firstPlace + macrosName.length();
-            int closeBracPlace = openBracPlace;
-            while (balance != 0 && closeBracPlace < expr.length() - 1) {
-                closeBracPlace++;
-                if (expr.charAt(closeBracPlace) == '(') {
+            int openBrPos = firstPlace + macrosName.length();
+            int closeBrPos = openBrPos;
+            while (balance != 0 && closeBrPos < expr.length() - 1) {
+                closeBrPos++;
+                if (expr.charAt(closeBrPos) == '(') {
                     balance++;
                 }
-                if (expr.charAt(closeBracPlace) == ')') {
+                if (expr.charAt(closeBrPos) == ')') {
                     balance--;
                 }
             }
-            if (closeBracPlace == expr.length()) {
+            if (closeBrPos == expr.length()) {
                 throw new ParseExprException();
             }
-            String val = expr.substring(openBracPlace + 1, closeBracPlace);
+            String val = expr.substring(openBrPos + 1, closeBrPos);
             String repl = replacement.replace(varName, val);
-            return expr.substring(0, firstPlace) + repl + expr.substring(closeBracPlace + 1);
+            return expr.substring(0, firstPlace) + repl + expr.substring(closeBrPos + 1);
         }
     }
 
@@ -100,7 +100,7 @@ public class EquationHandler {
         boolean wereChanges = true;
         while (wereChanges) {
             wereChanges = false;
-            for (Macros macros: macros) {
+            for (Macros macros : macros) {
                 if (expr.contains(macros.macrosName + '(')) {
                     wereChanges = true;
                     expr = macros.getReplacedString(expr);

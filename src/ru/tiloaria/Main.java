@@ -2,19 +2,14 @@ package ru.tiloaria;
 
 import java.util.Scanner;
 
-public class ConsoleCalculator {
-
-    public ConsoleCalculator() {
-    }
+public class Main {
 
     public static void main(String[] args) {
         printUsage();
-        ConsoleCalculator consoleCalculator = new ConsoleCalculator();
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
                 String expr = scanner.nextLine();
-                expr = expr.replaceAll("\n|\r| ", "");
                 if (expr.equals("help")) {
                     printUsage();
                 }
@@ -25,7 +20,7 @@ public class ConsoleCalculator {
                 System.out.println(handler.eval());
 
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
             }
         }
     }

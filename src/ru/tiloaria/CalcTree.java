@@ -3,7 +3,7 @@ package ru.tiloaria;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static ru.tiloaria.NodeType.*;
+import static ru.tiloaria.CalcTree.NodeType.*;
 
 public class CalcTree {
     private NodeType type;
@@ -47,7 +47,7 @@ public class CalcTree {
                 result = Math.pow(res1, res2);
                 break;
         }
-        if (result.equals(Double.NaN)) {
+        if (Double.isNaN(result) || Double.isInfinite(result)) {
             throw new MathException("Incorrect operation, ln or /");
         }
         return result;
@@ -69,7 +69,7 @@ public class CalcTree {
 
         if (isVar(input)) {
             if (!variables.containsKey(input)) {
-                throw new ParseExprException("Undefine variable: " + input);
+                throw new ParseExprException("Undefined variable: " + input);
             }
             return new CalcTree(VAR, variables.get(input));
         }
@@ -92,6 +92,19 @@ public class CalcTree {
             return new CalcTree(input.charAt(0) == 's' ? SIN : COS, child);
         }
         throw new ParseExprException();
+    }
+
+    protected enum NodeType {
+        VAL,
+        VAR,
+        PL,
+        MIN,
+        MULT,
+        DIV,
+        SIN,
+        COS,
+        LN,
+        EXP
     }
 
     private static boolean isVar(String s) {
