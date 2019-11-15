@@ -1,0 +1,11 @@
+Console application.
+Test task for JetBrains.
+It saves variables and support macroses.
+Support operations: +, -, *, /, ^, ln(), sin(), cos()
+Sample:
+2*3
+>x0 = 6.0
+$r(x)=x+2
+>$r
+x0*r(2)
+>x1 = 14.0
