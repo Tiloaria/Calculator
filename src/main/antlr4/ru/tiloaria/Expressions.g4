@@ -57,17 +57,22 @@ exprOther returns [CalcTree tree]
     | LN exprWithBrac {
         $tree = new CalcTree(NodeType.LN, new ArrayList<CalcTree>(Arrays.asList($exprWithBrac.tree)));
     }
-    | VAR exprWithBrac {
-        $tree = new CalcTree(NodeType.FUNC, $VAR.text);
-    }
     | exprWithBrac {
         $tree = $exprWithBrac.tree;
     }
     | VAR {
         $tree = new CalcTree(NodeType.VAR, $VAR.text);
     }
+    | value {
+        $tree = new CalcTree(NodeType.VAL, $value.text);
+    };
+
+value returns [String text]
+    : MINUS VAL {
+        $text = $MINUS.text + $VAL.text;
+    }
     | VAL {
-        $tree = new CalcTree(NodeType.VAL, $VAL.text);
+        $text = $VAL.text;
     };
 
 exprWithBrac returns [CalcTree tree]
@@ -87,6 +92,6 @@ SIN: 'sin';
 COS: 'cos';
 LN: 'ln';
 POW: '^';
-VAL: '-'?[0-9]+('.'[0-9]*)?;
+VAL: [0-9]+('.'[0-9]*)?;
 VAR: [a-zA-Z][a-zA-Z0-9]*;
 WS: [ \r\n\t] + -> skip;

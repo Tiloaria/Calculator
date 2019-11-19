@@ -1,5 +1,7 @@
 Console application.
 Test task for JetBrains.
+You can build project in terminal with 'mvn package.
+Run with command:'mvn exec:java -D exec.mainClass=ru.tiloaria.Main'
 It saves variables and support macroses.
 Support operations: +, -, *, /, ^, ln(), sin(), cos()
 Sample:

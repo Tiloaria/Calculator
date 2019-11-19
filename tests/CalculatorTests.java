@@ -38,9 +38,10 @@ public class CalculatorTests {
         ExpressionsLexer lexer = new ExpressionsLexer(input);
         CommonTokenStream lex = new CommonTokenStream(lexer);
         ExpressionsParser parser = new ExpressionsParser(lex);
+        parser.removeErrorListeners();
         CalcTree res = parser.expr().tree;
         if (res == null) {
-            throw new ParseExprException("Can't parce expression");
+            throw new ParseExprException("Can't parse expression");
         }
         return res;
     }
@@ -61,7 +62,6 @@ public class CalculatorTests {
         runTest("2.0*4.0", 8.0);
         runTest("12.0^2.0", 144.0);
         runTest("22.0/3.0", 22.0 / 3.0);
-        runTest("sin(Pi)", 0.0);
     }
 
     @Test
@@ -75,6 +75,8 @@ public class CalculatorTests {
         runTest("2^2^3", 256.0);
         runTest("(2+2)*2", 8.0);
         runTest("2/(12/3)", 0.5);
+        runTest("7-(3*2)", 1.0);
+        runTest("7-3*2", 1.0);
     }
 
     @Test

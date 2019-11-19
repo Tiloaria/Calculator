@@ -38,6 +38,14 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>ru.tiloaria.Main</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

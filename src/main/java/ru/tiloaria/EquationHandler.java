@@ -17,18 +17,17 @@ public class EquationHandler {
     }
 
     /**
-     * Parse expression
+     * Parse expression via creating parser
      * @param expr expression with macros or operations
      * @return string with result for print
-     * @throws ParseExprException
-     * @throws MathException
+     * @throws ParseExprException in case of incorrect syntax
+     * @throws MathException in case of impossibility to calculate
      */
     public String eval(String expr) throws ParseExprException, MathException {
-        if (isMacros(expr)) {//TODO get just parsed class
+        if (isMacros(expr)) {
             return addMacros(expr);
         }
         expr = replaceMacros(expr);//TODO make correct replacement
-        System.out.println(expr);
         VariableTree newVar = parseVar(expr);
         if (newVar != null) {
             return addVar(newVar);
@@ -58,7 +57,9 @@ public class EquationHandler {
         CharStream input = CharStreams.fromString(str);
         ExpressionsLexer lexer = new ExpressionsLexer(input);
         CommonTokenStream lex = new CommonTokenStream(lexer);
-        return new ExpressionsParser(lex);
+        ExpressionsParser parser = new ExpressionsParser(lex);
+        parser.removeErrorListeners();
+        return parser;
     }
 
     private static CalcTree parseExpr(String str) {
@@ -89,7 +90,7 @@ public class EquationHandler {
         return '$' + macrName;
     }
 
-    private static final double Eps = 0.00000000001;//TODO think how to replace
+    private static final double Eps = 1e-7;
 
     private String replaceMacros(String expr) throws ParseExprException, MathException {
         final int operationsLimit = 100;

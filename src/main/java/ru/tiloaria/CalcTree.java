@@ -75,5 +75,5 @@ public class CalcTree {
         this.value = value;
     }
 
-    private static final double Eps = 0.00000000001;
+    private static final double Eps = 1e-7;
 }
